@@ -16,6 +16,9 @@ class ImageReader
                     images: []
                 }
 
+        @loadingList = []
+        @loadingWaitList = []
+
         @startLoading()
 
 
@@ -52,28 +55,67 @@ class ImageReader
                 else
                     @imageMap.length - 1
         
-
         current = begin 
-        @loadingWaitList = while (current <= end)
+        loadingWaitList = while (current <= end)
             image = @imageMap[current]
+
             if current == index 
-                image.callback = callback
+                image.callback ?= callback
             else 
-                if @options.standardCallback? 
-                    image.callback = @options.standardCallback
+                image.callback ?= @options.standardCallback
 
             current += 1
 
             image
 
+        @loadingWaitList.push loadingWaitList
+        @loadingWaitList = _.flatten @loadingWaitList
+        @loadingWaitList = _.uniq @loadingWaitList
 
+
+        @_workOnLoadingList()
+
+
+    _workOnLoadingList: ->
+        if @loadingWaitList.length >= 1 && @loadingList.length < @options.parallelLoadCount 
+            
+            current = @loadingWaitList[0]
+            @loadingWaitList = _.without @loadingWaitList, current
+
+            if not current.finished 
+                @loadingList.push current
+
+                image = new Image()
+                current.image = image
+                image.src = ""
+
+                jQuery(image).load _.bind(@_loadingFinished, this, current)
+
+                image.src = current.url
+                
+                # TODO: alt attribute
+                if @loadingList.length < @options.parallelLoadCount 
+                    @_workOnLoadingList()
+            
+            else
+                @_loadingFinished current
+
+    
+    _loadingFinished: (imageMapElement, event) =>
+
+        imageMapElement.finished = true
+
+        imageMapElement?.callback?( 
+            @imageMap.indexOf(imageMapElement),
+            imageMapElement.image 
+        )
+
+        @loadingList = _.without @loadingList, imageMapElement
+
+        @_workOnLoadingList()
 
     
 
-    
-
-    
-
-   
+# export this class 
 root = exports ? this
 root.ImageReader = ImageReader

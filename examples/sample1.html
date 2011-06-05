@@ -5,13 +5,25 @@
     
         <title>Sample1</title>
 
+        <script src="../lib/jquery.js" type="text/javascript" charset="utf-8"></script>
+
         <script src="../lib/underscore.js" type="text/javascript" charset="utf-8"></script>
         <script src="../js/ImageReader.js" type="text/javascript" charset="utf-8"></script>
 
         <script>
             var a = new ImageReader({
-                images: ["1", "2", "3"]
+                images: [
+                    "images/1.jpg", 
+                    "images/2.jpg", 
+                    "images/3.jpg", 
+                    "images/4.jpg", 
+                    "images/5.jpg", 
+                    "images/6.jpg", 
+                    "images/7.jpg"
+                ]
             }) 
+
+            a.getImage(5)
 
         </script>
         
