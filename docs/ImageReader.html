@@ -1,0 +1,119 @@
+<!DOCTYPE html>  <html> <head>   <title>ImageReader.coffee</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="ImageFader.html">                 ImageFader.coffee               </a>                                           <a class="source" href="ImageReader.html">                 ImageReader.coffee               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               ImageReader.coffee             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <p>Takes a list of image urls and offers methods and callbacks
+to retrieve image dom objects ready to put into the markup. </p>
+
+<p>ImageReader preloads a certain number of previous and next images
+to speed up any potential interaction. Preloading happens (if configured)
+in a parallel fashion up to a certain number of connections.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="k">class</span> <span class="nx">ImageReader</span>
+
+    <span class="nv">options: </span><span class="p">{}</span>
+    <span class="nv">images: </span><span class="p">[]</span>
+
+    <span class="nv">imageMap: </span><span class="p">[]</span>
+
+    <span class="nv">loadingList: </span><span class="p">[]</span>
+    <span class="nv">loadingWaitList: </span><span class="p">[]</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <h3>Options</h3>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>ImageReader takes a single object as an option value.</p>
+
+<pre><code>{
+   preloadCount: 5,
+   parallelLoadCount: 1,
+   images: [
+      "http://www.example.com/images/image1.jpg",
+      ...
+   ]
+}
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">constructor: </span><span class="nf">(options) -&gt;</span>
+        <span class="nv">options = </span><span class="k">if</span> <span class="nx">options</span> <span class="k">then</span> <span class="nx">options</span> <span class="k">else</span> <span class="p">{}</span>
+        <span class="vi">@options = </span><span class="nx">_</span><span class="p">.</span><span class="nx">defaults</span> <span class="nx">options</span><span class="p">,</span> <span class="p">{</span>
+                    <span class="nv">preloadCount: </span><span class="mi">5</span>
+                    <span class="nv">parallelLoadCount: </span><span class="mi">1</span>
+                    <span class="nv">images: </span><span class="p">[]</span>
+                <span class="p">}</span>
+
+        <span class="vi">@loadingList = </span><span class="p">[]</span>
+        <span class="vi">@loadingWaitList = </span><span class="p">[]</span>
+
+        <span class="nx">@_startLoading</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <h3>Public Methods</h3>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p>Returns the total image count</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">getImageCount: </span><span class="nf">() -&gt;</span>
+        <span class="nx">@images</span><span class="p">.</span><span class="nx">length</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p>Calls the callback with an image identified by its index from the 
+sources list. The callback will be called when the image is ready.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">getImage: </span><span class="nf">(index, callback) -&gt;</span>
+        </pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <p>If we preload more than 2 images, preload from
+index - floor(preloadCount / 2) </p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nv">offset = </span>   <span class="k">if</span> <span class="nx">@options</span><span class="p">.</span><span class="nx">preloadCount</span> <span class="o">&gt;</span> <span class="mi">2</span>
+                        <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span> <span class="nx">@options</span><span class="p">.</span><span class="nx">preloadCount</span> <span class="err">/ 2</span>
+                    <span class="k">else</span>
+                        <span class="mi">0</span></pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <p>Preload more images coming up then previous ones.</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nv">offset = </span><span class="k">if</span> <span class="nx">@options</span><span class="p">.</span><span class="nx">preloadCount</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">then</span> <span class="nx">offset</span> <span class="o">-</span> <span class="mi">1</span> <span class="k">else</span> <span class="nx">offset</span>
+
+        <span class="nv">begin = </span><span class="k">if</span> <span class="p">(</span><span class="nv">begin = </span><span class="nx">index</span> <span class="o">-</span> <span class="nx">offset</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span> 
+                    <span class="nx">begin</span> 
+                <span class="k">else</span>
+                    <span class="mi">0</span>
+
+        <span class="nv">end = </span>  <span class="k">if</span> <span class="p">(</span><span class="nv">end = </span><span class="nx">index</span> <span class="o">+</span> <span class="nx">@options</span><span class="p">.</span><span class="nx">preloadCount</span> <span class="o">-</span> <span class="nx">offset</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nx">@imageMap</span><span class="p">.</span><span class="nx">length</span> 
+                    <span class="nx">end</span>
+                <span class="k">else</span>
+                    <span class="nx">@imageMap</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span>
+        
+        <span class="nv">current = </span><span class="nx">begin</span> 
+        <span class="nv">loadingWaitList = </span><span class="k">while</span> <span class="p">(</span><span class="nx">current</span> <span class="o">&lt;=</span> <span class="nx">end</span><span class="p">)</span>
+            <span class="nv">image = </span><span class="nx">@imageMap</span><span class="p">[</span><span class="nx">current</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="nx">current</span> <span class="o">==</span> <span class="nx">index</span> 
+                <span class="nx">image</span><span class="p">.</span><span class="nx">callback</span> <span class="o">?=</span> <span class="nx">callback</span>
+            <span class="k">else</span> 
+                <span class="nx">image</span><span class="p">.</span><span class="nx">callback</span> <span class="o">?=</span> <span class="nx">@options</span><span class="p">.</span><span class="nx">standardCallback</span>
+
+            <span class="nx">current</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="nx">image</span>
+
+        <span class="nx">@loadingWaitList</span><span class="p">.</span><span class="nx">push</span> <span class="nx">loadingWaitList</span>
+        <span class="vi">@loadingWaitList = </span><span class="nx">_</span><span class="p">.</span><span class="nx">flatten</span> <span class="nx">@loadingWaitList</span>
+        <span class="vi">@loadingWaitList = </span><span class="nx">_</span><span class="p">.</span><span class="nx">uniq</span> <span class="nx">@loadingWaitList</span>
+
+        <span class="nx">@_workOnLoadingList</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <h3>Private Methods</h3>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <p>Build all data structures and start (pre)loading</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">_startLoading: </span><span class="o">-&gt;</span> 
+
+        <span class="vi">@imageMap = </span><span class="p">({</span>
+            <span class="nv">finished: </span><span class="kc">false</span>
+            <span class="nv">image: </span><span class="kc">null</span>
+            <span class="nv">url: </span><span class="nx">image</span>
+            <span class="nv">index: </span><span class="nx">_</span><span class="p">.</span><span class="nx">indexOf</span> <span class="nx">@options</span><span class="p">.</span><span class="nx">images</span><span class="p">,</span> <span class="nx">image</span>
+        <span class="p">}</span> <span class="k">for</span> <span class="nx">image</span> <span class="k">in</span> <span class="nx">@options</span><span class="p">.</span><span class="nx">images</span><span class="p">)</span>
+         </pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <p>Work on the loading list. Check if there is another image to preload and
+if there are enough resources left. </p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">_workOnLoadingList: </span><span class="o">-&gt;</span>
+        <span class="k">if</span> <span class="nx">@loadingWaitList</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="nx">@loadingList</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;</span> <span class="nx">@options</span><span class="p">.</span><span class="nx">parallelLoadCount</span> 
+            
+            <span class="nv">current = </span><span class="nx">@loadingWaitList</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="vi">@loadingWaitList = </span><span class="nx">_</span><span class="p">.</span><span class="nx">without</span> <span class="nx">@loadingWaitList</span><span class="p">,</span> <span class="nx">current</span>
+
+            <span class="k">if</span> <span class="o">not</span> <span class="nx">current</span><span class="p">.</span><span class="nx">finished</span> 
+                <span class="nx">@loadingList</span><span class="p">.</span><span class="nx">push</span> <span class="nx">current</span></pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <p>Mind the order in which we create the image, bind the event handler and 
+assign the image url. This should now work as expected on all browsers 
+out there.</p>             </td>             <td class="code">               <div class="highlight"><pre>                <span class="nv">image = </span><span class="k">new</span> <span class="nx">Image</span><span class="p">()</span>
+                <span class="nv">current.image = </span><span class="nx">image</span>
+                <span class="nv">image.src = </span><span class="s2">&quot;&quot;</span>
+
+                <span class="nx">jQuery</span><span class="p">(</span><span class="nx">image</span><span class="p">).</span><span class="nx">load</span> <span class="nx">_</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="nx">@_loadingFinished</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="nx">current</span><span class="p">)</span>
+
+                <span class="nv">image.src = </span><span class="nx">current</span><span class="p">.</span><span class="nx">url</span>
+                </pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <p><strong>TODO</strong>: Handle the alt attribute</p>             </td>             <td class="code">               <div class="highlight"><pre>                <span class="k">if</span> <span class="nx">@loadingList</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;</span> <span class="nx">@options</span><span class="p">.</span><span class="nx">parallelLoadCount</span> 
+                    <span class="nx">@_workOnLoadingList</span><span class="p">()</span>
+            
+            <span class="k">else</span>
+                <span class="nx">@_loadingFinished</span> <span class="nx">current</span></pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <p>Finish callback for the onLoad event. Calls the callback submitted with the
+image requst.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">_loadingFinished: </span><span class="p">(</span><span class="nx">imageMapElement</span><span class="p">,</span> <span class="nx">event</span><span class="p">)</span> <span class="o">=&gt;</span>
+
+        <span class="nv">imageMapElement.finished = </span><span class="kc">true</span>
+
+        <span class="nv">imageMapElement.image = </span><span class="nx">$</span><span class="p">(</span><span class="nx">imageMapElement</span><span class="p">.</span><span class="nx">image</span><span class="p">)</span>
+
+        <span class="nx">imageMapElement</span><span class="o">?</span><span class="p">.</span><span class="nx">callback</span><span class="o">?</span><span class="p">(</span> 
+            <span class="nx">@imageMap</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">imageMapElement</span><span class="p">),</span>
+            <span class="nx">imageMapElement</span>
+        <span class="p">)</span>
+
+        <span class="vi">@loadingList = </span><span class="nx">_</span><span class="p">.</span><span class="nx">without</span> <span class="nx">@loadingList</span><span class="p">,</span> <span class="nx">imageMapElement</span>
+
+        <span class="nx">@_workOnLoadingList</span><span class="p">()</span>
+
+    </pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <p>Now export this class </p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">root = </span><span class="nx">exports</span> <span class="o">?</span> <span class="k">this</span>
+<span class="nv">root.ImageReader = </span><span class="nx">ImageReader</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

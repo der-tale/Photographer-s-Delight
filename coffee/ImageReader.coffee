@@ -1,3 +1,11 @@
+# Takes a list of image urls and offers methods and callbacks
+# to retrieve image dom objects ready to put into the markup. 
+#                                                                           
+# ImageReader preloads a certain number of previous and next images
+# to speed up any potential interaction. Preloading happens (if configured)
+# in a parallel fashion up to a certain number of connections.
+
+#
 class ImageReader
 
     options: {}
@@ -8,6 +16,18 @@ class ImageReader
     loadingList: []
     loadingWaitList: []
 
+    #### Options
+
+    # ImageReader takes a single object as an option value.
+    #
+    #     {
+    #        preloadCount: 5,
+    #        parallelLoadCount: 1,
+    #        images: [
+    #           "http://www.example.com/images/image1.jpg",
+    #           ...
+    #        ]
+    #     }
     constructor: (options) ->
         options = if options then options else {}
         @options = _.defaults options, {
@@ -19,20 +39,17 @@ class ImageReader
         @loadingList = []
         @loadingWaitList = []
 
-        @startLoading()
+        @_startLoading()
 
 
-    startLoading: -> 
+    #### Public Methods
 
-        @imageMap = ({
-            finished: false
-            image: null
-            url: image
-        } for image in @options.images)
-         
-        @getImage(0)
+    # Returns the total image count
+    getImageCount: () ->
+        @images.length
 
-
+    # Calls the callback with an image identified by its index from the 
+    # sources list. The callback will be called when the image is ready.
     getImage: (index, callback) ->
         
         # If we preload more than 2 images, preload from
@@ -42,7 +59,7 @@ class ImageReader
                     else
                         0
 
-        # In doubt, preload more images coming up then previous ones
+        # Preload more images coming up then previous ones.
         offset = if @options.preloadCount % 2 == 0 then offset - 1 else offset
 
         begin = if (begin = index - offset) >= 0 
@@ -72,10 +89,25 @@ class ImageReader
         @loadingWaitList = _.flatten @loadingWaitList
         @loadingWaitList = _.uniq @loadingWaitList
 
-
         @_workOnLoadingList()
 
 
+    #### Private Methods
+
+    # Build all data structures and start (pre)loading
+    _startLoading: -> 
+
+        @imageMap = ({
+            finished: false
+            image: null
+            url: image
+            index: _.indexOf @options.images, image
+        } for image in @options.images)
+         
+
+
+    # Work on the loading list. Check if there is another image to preload and
+    # if there are enough resources left. 
     _workOnLoadingList: ->
         if @loadingWaitList.length >= 1 && @loadingList.length < @options.parallelLoadCount 
             
@@ -85,6 +117,9 @@ class ImageReader
             if not current.finished 
                 @loadingList.push current
 
+                # Mind the order in which we create the image, bind the event handler and 
+                # assign the image url. This should now work as expected on all browsers 
+                # out there.
                 image = new Image()
                 current.image = image
                 image.src = ""
@@ -93,21 +128,25 @@ class ImageReader
 
                 image.src = current.url
                 
-                # TODO: alt attribute
+                # **TODO**: Handle the alt attribute
                 if @loadingList.length < @options.parallelLoadCount 
                     @_workOnLoadingList()
             
             else
                 @_loadingFinished current
 
-    
+
+     # Finish callback for the onLoad event. Calls the callback submitted with the
+     # image requst.
     _loadingFinished: (imageMapElement, event) =>
 
         imageMapElement.finished = true
 
+        imageMapElement.image = $(imageMapElement.image)
+
         imageMapElement?.callback?( 
             @imageMap.indexOf(imageMapElement),
-            imageMapElement.image 
+            imageMapElement
         )
 
         @loadingList = _.without @loadingList, imageMapElement
@@ -116,6 +155,6 @@ class ImageReader
 
     
 
-# export this class 
+# Now export this class 
 root = exports ? this
 root.ImageReader = ImageReader

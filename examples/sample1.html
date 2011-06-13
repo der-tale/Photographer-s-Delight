@@ -9,27 +9,44 @@
 
         <script src="../lib/underscore.js" type="text/javascript" charset="utf-8"></script>
         <script src="../js/ImageReader.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../js/ImageFader.js" type="text/javascript" charset="utf-8"></script>
 
         <script>
-            var a = new ImageReader({
-                images: [
-                    "images/1.jpg", 
-                    "images/2.jpg", 
-                    "images/3.jpg", 
-                    "images/4.jpg", 
-                    "images/5.jpg", 
-                    "images/6.jpg", 
-                    "images/7.jpg"
-                ]
-            }) 
+            $(window).ready (function() {
+                var a = new ImageReader({
+                    images: [
+                        "images/1.jpg", 
+                        "images/2.jpg", 
+                        "images/3.jpg", 
+                        "images/4.jpg", 
+                        "images/5.jpg", 
+                        "images/6.jpg", 
+                        "images/7.jpg"
+                    ]
+                }) 
 
-            a.getImage(5)
+                var b = new ImageFader({
+                    imageReader: a,
+                    viewport: $("div#image"),
+                    events: {
+                        click: function(e) {
+                            e.preventDefault()
+                            b.next()
+                        }
+                    }
+                })
+
+            
+            })
+
 
         </script>
         
     </head>
 
     <body>
+
+        <div id="image" style="position: relative; width: 1000px; height: 800px; background: #aaaaaa;"></div>
         
     </body>
 </html>

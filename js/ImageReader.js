@@ -16,25 +16,10 @@
       });
       this.loadingList = [];
       this.loadingWaitList = [];
-      this.startLoading();
+      this._startLoading();
     }
-    ImageReader.prototype.startLoading = function() {
-      var image;
-      this.imageMap = (function() {
-        var _i, _len, _ref, _results;
-        _ref = this.options.images;
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          image = _ref[_i];
-          _results.push({
-            finished: false,
-            image: null,
-            url: image
-          });
-        }
-        return _results;
-      }).call(this);
-      return this.getImage(0);
+    ImageReader.prototype.getImageCount = function() {
+      return this.images.length;
     };
     ImageReader.prototype.getImage = function(index, callback) {
       var begin, current, end, image, loadingWaitList, offset;
@@ -71,6 +56,24 @@
       this.loadingWaitList = _.uniq(this.loadingWaitList);
       return this._workOnLoadingList();
     };
+    ImageReader.prototype._startLoading = function() {
+      var image;
+      return this.imageMap = (function() {
+        var _i, _len, _ref, _results;
+        _ref = this.options.images;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          image = _ref[_i];
+          _results.push({
+            finished: false,
+            image: null,
+            url: image,
+            index: _.indexOf(this.options.images, image)
+          });
+        }
+        return _results;
+      }).call(this);
+    };
     ImageReader.prototype._workOnLoadingList = function() {
       var current, image;
       if (this.loadingWaitList.length >= 1 && this.loadingList.length < this.options.parallelLoadCount) {
@@ -93,9 +96,10 @@
     };
     ImageReader.prototype._loadingFinished = function(imageMapElement, event) {
       imageMapElement.finished = true;
+      imageMapElement.image = $(imageMapElement.image);
       if (imageMapElement != null) {
         if (typeof imageMapElement.callback === "function") {
-          imageMapElement.callback(this.imageMap.indexOf(imageMapElement), imageMapElement.image);
+          imageMapElement.callback(this.imageMap.indexOf(imageMapElement), imageMapElement);
         }
       }
       this.loadingList = _.without(this.loadingList, imageMapElement);
