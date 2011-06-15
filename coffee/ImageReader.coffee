@@ -46,7 +46,7 @@ class ImageReader
 
     # Returns the total image count
     getImageCount: () ->
-        @images.length
+        @options.images.length
 
     # Calls the callback with an image identified by its index from the 
     # sources list. The callback will be called when the image is ready.
@@ -140,6 +140,8 @@ class ImageReader
      # image requst.
     _loadingFinished: (imageMapElement, event) =>
 
+        @loadingList = _.without @loadingList, imageMapElement
+
         imageMapElement.finished = true
 
         imageMapElement.image = $(imageMapElement.image)
@@ -149,7 +151,8 @@ class ImageReader
             imageMapElement
         )
 
-        @loadingList = _.without @loadingList, imageMapElement
+        imageMapElement.callback = null
+
 
         @_workOnLoadingList()
 

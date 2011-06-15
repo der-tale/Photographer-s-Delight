@@ -19,7 +19,7 @@
       this._startLoading();
     }
     ImageReader.prototype.getImageCount = function() {
-      return this.images.length;
+      return this.options.images.length;
     };
     ImageReader.prototype.getImage = function(index, callback) {
       var begin, current, end, image, loadingWaitList, offset;
@@ -95,6 +95,7 @@
       }
     };
     ImageReader.prototype._loadingFinished = function(imageMapElement, event) {
+      this.loadingList = _.without(this.loadingList, imageMapElement);
       imageMapElement.finished = true;
       imageMapElement.image = $(imageMapElement.image);
       if (imageMapElement != null) {
@@ -102,7 +103,7 @@
           imageMapElement.callback(this.imageMap.indexOf(imageMapElement), imageMapElement);
         }
       }
-      this.loadingList = _.without(this.loadingList, imageMapElement);
+      imageMapElement.callback = null;
       return this._workOnLoadingList();
     };
     return ImageReader;

@@ -61,7 +61,6 @@ class ImageFader
                     fitImagesToViewPort: false
                     events: {
                         click: () ->
-                            console.log "default click event"
                     }
                     duration: 500
 
@@ -79,14 +78,12 @@ class ImageFader
     # Show the image with the given index
     display: (index) ->
         if not @images[index]
-            console.log "get image from reader", index
             @options.imageReader.getImage(index, @_addImage)
         else 
-            console.log "we have the image", index
             @_display(index)
 
     next: () =>
-        if @imageCount < @currentImage + 1
+        if @currentImage + 1 < @imageCount 
             @display @currentImage + 1
         else
             @display 0
@@ -112,20 +109,17 @@ class ImageFader
         @images[index] = image
 
         @_insertImage image
-        #if @fitImagesToViewPort then @options._fitImage image
-        #@_centerImage image
+        if @options.fitImagesToViewPort then @_fitImage image
+        @_centerImage image
 
         @_display(index)
 
     _display: (index) =>
         @queue.push index
-        console.log "display ", index, "called, queue now", @queue
         @_animate()
 
 
     _insertImage: (image) ->
-        console.log("insertImage", image)
-        console.log(@options.viewport)
         @options.viewport.append image.image
         image.image.hide()
 
@@ -139,33 +133,45 @@ class ImageFader
             y: image.height()
         }
 
+    # = 1 / (imageDimensions[dimension] / viewportDimensions[dimension])
+    _calculateEnlargementFactor: ( dimensions1, dimensions2, dimension ) ->
+        dimensions1[dimension] / dimensions2[dimension] 
 
     # Fit the image into the viewport
     _fitImage: (image) ->
-
         viewportDimensions = @_imageDimensions(@options.viewport) 
         imageDimensions = @_imageDimensions(image.image)
 
         longestDimensionImage = 
-            if imageDimensions.x >= viewportDimensions.x then 'x' else 'y'
+            if imageDimensions.x >= viewportDimensions.x 
+                'x'
+            else if imageDimensions.y > viewportDimensions.y 
+                'y'
+            else if imageDimensions.x >= imageDimensions.y 
+                'x'
+            else 
+                'y'
 
         otherDimensionImage =
             if longestDimensionImage is 'x' then 'y' else 'x'
 
-        # = 1 / (imageDimensions[dimension] / viewportDimensions[dimension])
-        calculateEnlargementFactor = ( dimension ) ->
-            viewportDimensions[dimension] / imageDimension[dimension] 
-
-        enlargementFactor = calculateEnlargementFactor longestDimensionImage
+        enlargementFactor = @_calculateEnlargementFactor viewportDimensions,
+            imageDimensions,
+            longestDimensionImage
 
         if enlargmentFactor * imageDimensions[otherDimensionImage] > viewportDimensions[otherDimensionImage]
-            enlargmentFactor = calculateEnlargementFactor otherDimensionImage
+            enlargmentFactor = @_calculateEnlargementFactor viewportDimensions,
+                imageDimensions,
+                otherDimensionImage
 
-        image.css {
-            width: imageDimensions.x * enlargmentFactor
-            height: imageDimensions.y * enlargmentFactor
+        widthToSet = Math.round(imageDimensions.x * enlargementFactor)
+        heightToSet = Math.round(imageDimensions.y * enlargementFactor)
+
+        image.image.css {
+            width: widthToSet
+            height: heightToSet
         }
-        
+
 
     calculateOffset: ( dimensions1, dimensions2, dimension ) ->
         Math.floor ( dimensions1[dimension] - dimensions2[dimension] ) / 2
@@ -178,7 +184,7 @@ class ImageFader
         image.image.css {
             position: "absolute"
             left: @calculateOffset viewportDimensions, imageDimensions, 'x'
-            top: @calculateOffset viewportDimensions, imageDimensions, 'x'
+            top: @calculateOffset viewportDimensions, imageDimensions, 'y'
         }
 
 
@@ -187,23 +193,16 @@ class ImageFader
         
         @animationInProgress = true
 
-        console.log next, @queue
         next = @queue[0]
         @queue = _.without @queue, next
-
-        console.log next, @queue
-
-        console.log next, @currentImage
 
         if next is @currentImage then @_animateFinished()
         else 
             if @currentImage > -1
-                console.log("hide", @currentImage)
                 @images[@currentImage].image.animate {
                     opacity: 0 
                 }, @options.duration
 
-            console.log("show", next)
             @images[next].image.show()
             @images[next].image.animate {
                 opacity: 1 
@@ -216,7 +215,6 @@ class ImageFader
 
         @animationInProgress = false
 
-        console.log "animateFinished"
         if @queue.length > 0 then @_animate()
 
 

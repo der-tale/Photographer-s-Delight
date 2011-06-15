@@ -23,9 +23,7 @@
         centerImagesInViewport: true,
         fitImagesToViewPort: false,
         events: {
-          click: function() {
-            return console.log("default click event");
-          }
+          click: function() {}
         },
         duration: 500
       });
@@ -36,15 +34,13 @@
     }
     ImageFader.prototype.display = function(index) {
       if (!this.images[index]) {
-        console.log("get image from reader", index);
         return this.options.imageReader.getImage(index, this._addImage);
       } else {
-        console.log("we have the image", index);
         return this._display(index);
       }
     };
     ImageFader.prototype.next = function() {
-      if (this.imageCount < this.currentImage + 1) {
+      if (this.currentImage + 1 < this.imageCount) {
         return this.display(this.currentImage + 1);
       } else {
         return this.display(0);
@@ -67,16 +63,17 @@
     ImageFader.prototype._addImage = function(index, image) {
       this.images[index] = image;
       this._insertImage(image);
+      if (this.options.fitImagesToViewPort) {
+        this._fitImage(image);
+      }
+      this._centerImage(image);
       return this._display(index);
     };
     ImageFader.prototype._display = function(index) {
       this.queue.push(index);
-      console.log("display ", index, "called, queue now", this.queue);
       return this._animate();
     };
     ImageFader.prototype._insertImage = function(image) {
-      console.log("insertImage", image);
-      console.log(this.options.viewport);
       this.options.viewport.append(image.image);
       image.image.hide();
       return image.image.css({
@@ -89,22 +86,24 @@
         y: image.height()
       };
     };
+    ImageFader.prototype._calculateEnlargementFactor = function(dimensions1, dimensions2, dimension) {
+      return dimensions1[dimension] / dimensions2[dimension];
+    };
     ImageFader.prototype._fitImage = function(image) {
-      var calculateEnlargementFactor, enlargementFactor, enlargmentFactor, imageDimensions, longestDimensionImage, otherDimensionImage, viewportDimensions;
+      var enlargementFactor, enlargmentFactor, heightToSet, imageDimensions, longestDimensionImage, otherDimensionImage, viewportDimensions, widthToSet;
       viewportDimensions = this._imageDimensions(this.options.viewport);
       imageDimensions = this._imageDimensions(image.image);
-      longestDimensionImage = imageDimensions.x >= viewportDimensions.x ? 'x' : 'y';
+      longestDimensionImage = imageDimensions.x >= viewportDimensions.x ? 'x' : imageDimensions.y > viewportDimensions.y ? 'y' : imageDimensions.x >= imageDimensions.y ? 'x' : 'y';
       otherDimensionImage = longestDimensionImage === 'x' ? 'y' : 'x';
-      calculateEnlargementFactor = function(dimension) {
-        return viewportDimensions[dimension] / imageDimension[dimension];
-      };
-      enlargementFactor = calculateEnlargementFactor(longestDimensionImage);
+      enlargementFactor = this._calculateEnlargementFactor(viewportDimensions, imageDimensions, longestDimensionImage);
       if (enlargmentFactor * imageDimensions[otherDimensionImage] > viewportDimensions[otherDimensionImage]) {
-        enlargmentFactor = calculateEnlargementFactor(otherDimensionImage);
+        enlargmentFactor = this._calculateEnlargementFactor(viewportDimensions, imageDimensions, otherDimensionImage);
       }
-      return image.css({
-        width: imageDimensions.x * enlargmentFactor,
-        height: imageDimensions.y * enlargmentFactor
+      widthToSet = Math.round(imageDimensions.x * enlargementFactor);
+      heightToSet = Math.round(imageDimensions.y * enlargementFactor);
+      return image.image.css({
+        width: widthToSet,
+        height: heightToSet
       });
     };
     ImageFader.prototype.calculateOffset = function(dimensions1, dimensions2, dimension) {
@@ -117,7 +116,7 @@
       return image.image.css({
         position: "absolute",
         left: this.calculateOffset(viewportDimensions, imageDimensions, 'x'),
-        top: this.calculateOffset(viewportDimensions, imageDimensions, 'x')
+        top: this.calculateOffset(viewportDimensions, imageDimensions, 'y')
       });
     };
     ImageFader.prototype._animate = function() {
@@ -126,21 +125,16 @@
         return;
       }
       this.animationInProgress = true;
-      console.log(next, this.queue);
       next = this.queue[0];
       this.queue = _.without(this.queue, next);
-      console.log(next, this.queue);
-      console.log(next, this.currentImage);
       if (next === this.currentImage) {
         return this._animateFinished();
       } else {
         if (this.currentImage > -1) {
-          console.log("hide", this.currentImage);
           this.images[this.currentImage].image.animate({
             opacity: 0
           }, this.options.duration);
         }
-        console.log("show", next);
         this.images[next].image.show();
         this.images[next].image.animate({
           opacity: 1
@@ -150,7 +144,6 @@
     };
     ImageFader.prototype._animateFinished = function() {
       this.animationInProgress = false;
-      console.log("animateFinished");
       if (this.queue.length > 0) {
         return this._animate();
       }
