@@ -1,0 +1,106 @@
+<!DOCTYPE html>  <html> <head>   <title>ImagePagination.coffee</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="ImageFader.html">                 ImageFader.coffee               </a>                                           <a class="source" href="ImagePagination.html">                 ImagePagination.coffee               </a>                                           <a class="source" href="ImageReader.html">                 ImageReader.coffee               </a>                                           <a class="source" href="Interval.html">                 Interval.coffee               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               ImagePagination.coffee             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <p>Offers a simple pagination menu to select an image to display or
+to go to the next or previous image</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="k">class</span> <span class="nx">ImagePagination</span>
+
+
+    <span class="nv">options: </span><span class="p">{}</span>
+    <span class="nv">previousLink: </span><span class="kc">null</span>
+    <span class="nv">nextLink: </span><span class="kc">null</span>
+
+    <span class="nv">indexLinks: </span><span class="p">[]</span>
+
+    <span class="nv">currentImage: </span><span class="o">-</span><span class="mi">1</span>
+
+    <span class="nv">templates: </span><span class="p">{</span>
+        <span class="nv">link: </span><span class="s2">&quot;&lt;a href=&#39;javascript:;&#39;&gt;&lt;/a&gt;&quot;</span> 
+    <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <h3>Options</h3>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>ImageFader takes a single object as an option value.</p>
+
+<pre><code> {
+     container: null
+     imageReader: new ImageReader(...)
+     text: {
+         previous: "&lt;"
+         next: "&gt;"
+     }
+     css: {
+         selected: ".selected"
+     }
+     events: {
+          display: function() { ... }
+      }
+ }
+</code></pre>
+
+<p>The options in detail:</p>
+
+<ul>
+<li><strong>container:</strong> DOM element to put the pagination markup into</li>
+<li><strong>imageReader:</strong> An ImageReader instance</li>
+<li><strong>text:</strong>
+<ul><li><strong>previous:</strong> Text to display as previous link</li>
+<li><strong>next:</strong> Text to display as next link</li></ul></li>
+<li><strong>css:</strong>
+<ul><li><strong>selected:</strong> The CSS class to assign to the current selected 
+pagination element</li></ul></li>
+<li><strong>events:</strong>
+<ul><li><strong>display:</strong> This method is called whenever an image link is 
+clicked</li></ul></li>
+</ul>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">constructor: </span><span class="nf">(options) -&gt;</span>
+        <span class="nv">options = </span><span class="k">if</span> <span class="nx">options</span> <span class="k">then</span> <span class="nx">options</span> <span class="k">else</span> <span class="p">{}</span>
+        <span class="vi">@options = </span><span class="nx">_</span><span class="p">.</span><span class="nx">defaults</span> <span class="nx">options</span><span class="p">,</span> <span class="p">{</span>
+            <span class="nv">container: </span><span class="kc">null</span>
+            <span class="nv">imageReader: </span><span class="kc">null</span>
+            <span class="nv">text: </span><span class="p">{</span>
+                <span class="nv">previous: </span><span class="s2">&quot;&lt;&quot;</span>
+                <span class="nv">next: </span><span class="s2">&quot;&gt;&quot;</span>
+            <span class="p">}</span>
+            <span class="nv">css: </span><span class="p">{</span>
+                <span class="nv">selected: </span><span class="s2">&quot;selected&quot;</span>
+            <span class="p">}</span>
+            <span class="nv">events: </span><span class="p">{</span>
+                <span class="nv">display: </span><span class="kc">null</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="vi">@previousLink = </span><span class="kc">null</span>
+        <span class="vi">@nextLink = </span><span class="kc">null</span>
+        <span class="vi">@indexLinks = </span><span class="p">[]</span>
+
+        <span class="vi">@currentImage = </span><span class="o">-</span><span class="mi">1</span>
+
+        <span class="nx">@_init</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <h3>Public Methods</h3>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p>Display the image with index</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">display: </span><span class="nf">(index, options, event) -&gt;</span>
+        <span class="nx">@indexLinks</span><span class="p">[</span><span class="nx">index</span><span class="p">].</span><span class="nx">toggleClass</span> <span class="nx">@options</span><span class="p">.</span><span class="nx">css</span><span class="p">.</span><span class="nx">selected</span>
+        <span class="k">if</span> <span class="nx">@currentImage</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="nx">@indexLinks</span><span class="p">[</span><span class="nx">@currentImage</span><span class="p">].</span><span class="nx">toggleClass</span> <span class="nx">@options</span><span class="p">.</span><span class="nx">css</span><span class="p">.</span><span class="nx">selected</span>
+
+        <span class="vi">@currentImage = </span><span class="nx">index</span>
+
+        <span class="k">if</span> <span class="o">not</span> <span class="nx">options</span><span class="o">?</span><span class="p">.</span><span class="nx">overrideEvents</span> <span class="o">or</span> <span class="nx">options</span><span class="p">.</span><span class="nx">overrideEvents</span> <span class="o">is</span> <span class="o">not</span> <span class="kc">true</span> 
+            <span class="nx">@options</span><span class="p">.</span><span class="nx">events</span><span class="o">?</span><span class="p">.</span><span class="nx">display</span><span class="o">?</span><span class="p">(</span><span class="nx">index</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p>Show the previous image. If the current image is the first one, show the
+last in the set.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">previous: </span><span class="p">()</span> <span class="o">=&gt;</span>
+        <span class="k">if</span> <span class="nx">@currentImage</span> <span class="o">&gt;</span> <span class="mi">0</span>
+            <span class="nx">@display</span> <span class="nx">@currentImage</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="k">else</span> 
+            <span class="nx">@display</span> <span class="nx">@imageCount</span> <span class="o">-</span> <span class="mi">1</span></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <p>Show the next image. If the current image is the last one, show the first
+again.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">next: </span><span class="p">()</span> <span class="o">=&gt;</span>
+        <span class="k">if</span> <span class="nx">@currentImage</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="nx">@imageCount</span> 
+            <span class="nx">@display</span> <span class="nx">@currentImage</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">else</span>
+            <span class="nx">@display</span> <span class="mi">0</span></pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <h3>Private Methods</h3>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <p>Initialize</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">_init: </span><span class="nf">() -&gt;</span>
+        <span class="vi">@imageCount = </span><span class="nx">@options</span><span class="p">.</span><span class="nx">imageReader</span><span class="p">.</span><span class="nx">getImageCount</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <p>create markup</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="vi">@previousLink = </span><span class="nx">$</span><span class="p">(</span><span class="nx">@templates</span><span class="p">.</span><span class="nx">link</span><span class="p">)</span>
+        <span class="nx">@options</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">append</span> <span class="nx">@previousLink</span><span class="p">.</span><span class="nx">text</span> <span class="nx">@options</span><span class="p">.</span><span class="nx">text</span><span class="p">.</span><span class="nx">previous</span>  
+
+        <span class="k">for</span> <span class="nx">index</span> <span class="k">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">..</span><span class="nx">@imageCount</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="nx">@indexLinks</span><span class="p">[</span><span class="nx">index</span><span class="p">]</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="nx">@templates</span><span class="p">.</span><span class="nx">link</span><span class="p">)</span>
+            <span class="nx">@options</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">append</span> <span class="nx">@indexLinks</span><span class="p">[</span><span class="nx">index</span><span class="p">].</span><span class="nx">text</span> <span class="nx">index</span> <span class="o">+</span> <span class="mi">1</span>
+
+        <span class="vi">@nextLink = </span><span class="nx">$</span><span class="p">(</span><span class="nx">@templates</span><span class="p">.</span><span class="nx">link</span><span class="p">)</span>
+        <span class="nx">@options</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">append</span> <span class="nx">@nextLink</span><span class="p">.</span><span class="nx">text</span> <span class="nx">@options</span><span class="p">.</span><span class="nx">text</span><span class="p">.</span><span class="nx">next</span>  </pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <p>register events</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nx">@previousLink</span><span class="p">.</span><span class="nx">click</span> <span class="nx">@previous</span>
+        <span class="nx">@nextLink</span><span class="p">.</span><span class="nx">click</span> <span class="nx">@next</span>
+
+        <span class="k">for</span> <span class="nx">indexLink</span> <span class="k">in</span> <span class="nx">@indexLinks</span>
+            <span class="nx">indexLink</span><span class="p">.</span><span class="nx">click</span> <span class="nx">_</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span> <span class="nx">@display</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="nx">@indexLinks</span><span class="p">.</span><span class="nx">indexOf</span> <span class="p">(</span><span class="nx">indexLink</span><span class="p">)</span> <span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <p>display image one</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nx">@display</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">{</span>
+            <span class="nv">overrideEvents: </span><span class="kc">true</span>
+        <span class="p">})</span></pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <p>Now export this class </p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">root = </span><span class="nx">exports</span> <span class="o">?</span> <span class="k">this</span>
+<span class="nv">root.ImagePagination = </span><span class="nx">ImagePagination</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

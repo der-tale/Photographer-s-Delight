@@ -10,10 +10,13 @@
         <script src="../lib/underscore.js" type="text/javascript" charset="utf-8"></script>
         <script src="../js/ImageReader.js" type="text/javascript" charset="utf-8"></script>
         <script src="../js/ImageFader.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../js/ImagePagination.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../js/Interval.js" type="text/javascript" charset="utf-8"></script>
 
         <script>
             $(window).ready (function() {
-                var a = new ImageReader({
+                var a, b, c
+                a = new ImageReader({
                     images: [
                         "images/1.jpg", 
                         "images/2.jpg", 
@@ -25,29 +28,81 @@
                     ]
                 }) 
 
+                c = new ImagePagination({
+                    container: $("div#pagination"),
+                    events: {
+                        display: function(index) {
+                            b.display(index, {
+                                overrideEvents: true 
+                            }) 
+                        }
+                    },
+                    imageReader: a
+                })
 
-                var b = new ImageFader({
+                b = new ImageFader({
                     imageReader: a,
                     viewport: $("div#image"),
+                    duration: 1000,
                     events: {
                         click: function(e) {
                             e.preventDefault()
                             b.next()
+                        },
+                        display: function(index) {
+                            c.display(index, {
+                                overrideEvents: true 
+                            }) 
                         }
                     }
                 })
+
+                d = new Interval({
+                    container: $("div#timer"),
+                    state: true,
+                    interval: 5000,
+                    text: {
+                        stop: "pause",
+                        start: "play"
+                    },
+                    events: {
+                        tick: function() {
+                            b.next() 
+                        }
+                    }
+                })
+
 
             
             })
 
 
         </script>
+
+        <style type="text/css" media="screen">
+            html, body {
+                font-family: Helvetica, Arial, Sans;
+                font-size: 12px;
+            }
+
+            div#pagination a {
+                margin-right: 0.5em;
+                color: black;
+                text-decoration: underline; 
+            }
+
+            div#pagination a.selected {
+                color: #ff0000; 
+            }
+        </style>
         
     </head>
 
     <body>
 
-        <div id="image" style="position: relative; width: 1000px; height: 800px; background: #aaaaaa;"></div>
+        <div id="image" style="position: relative; width: 900px; height: 600px; background: #aaaaaa;"></div>
+        <div id="pagination"></div>
+        <div id="timer"></div>
         
     </body>
 </html>

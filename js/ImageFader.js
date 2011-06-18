@@ -32,11 +32,15 @@
       this.currentImage = -1;
       this._init();
     }
-    ImageFader.prototype.display = function(index) {
+    ImageFader.prototype.display = function(index, options) {
+      var _ref;
       if (!this.images[index]) {
-        return this.options.imageReader.getImage(index, this._addImage);
+        this.options.imageReader.getImage(index, this._addImage);
       } else {
-        return this._display(index);
+        this._display(index);
+      }
+      if (!(options != null ? options.overrideEvents : void 0) || options.overrideEvents === !true) {
+        return (_ref = this.options.events) != null ? typeof _ref.display === "function" ? _ref.display(index) : void 0 : void 0;
       }
     };
     ImageFader.prototype.next = function() {
@@ -48,7 +52,7 @@
     };
     ImageFader.prototype.previous = function() {
       if (this.currentImage > 0) {
-        return this.display(this.currentImage(-1));
+        return this.display(this.currentImage - 1);
       } else {
         return this.display(this.imageCount - 1);
       }
@@ -58,7 +62,9 @@
       if (this.options.events.click) {
         this.options.viewport.click(this.options.events.click);
       }
-      return this.display(0);
+      return this.display(0, {
+        overrideEvents: true
+      });
     };
     ImageFader.prototype._addImage = function(index, image) {
       this.images[index] = image;
@@ -143,10 +149,14 @@
       }
     };
     ImageFader.prototype._animateFinished = function() {
-      this.animationInProgress = false;
-      if (this.queue.length > 0) {
-        return this._animate();
-      }
+      var _this;
+      _this = this;
+      return window.setTimeout(function() {
+        _this.animationInProgress = false;
+        if (_this.queue.length > 0) {
+          return _this._animate();
+        }
+      }, 100);
     };
     return ImageFader;
   })();
