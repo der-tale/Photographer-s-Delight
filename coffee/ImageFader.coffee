@@ -230,7 +230,8 @@ class ImageFader
 
             @images[next].image.show()
             @images[next].image.animate {
-                opacity: 1 
+                opacity: 1,
+                useTranslate3d: true
             }, @options.duration, @_animateFinished
 
             @currentImage = next
