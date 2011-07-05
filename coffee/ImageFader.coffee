@@ -24,7 +24,7 @@ class ImageFader
     #         width: -1
     #       },
     #       centerImagesInViewport: true,
-    #       fitImagesToViewPort: true,
+    #       fitImagesToViewPort: false,
     #       events: {
     #         click: function(e) { ... }
     #         display: function(index) { ... )
@@ -44,7 +44,7 @@ class ImageFader
     #     centered in the viewport. Comes in handy if your images are of
     #     diverse size. *(default: true)*
     #   * **fitImagesToViewPort:** Set to true if the images should be
-    #     enlarged proportionally to fit the viewport. *(default: true)*
+    #     enlarged proportionally to fit the viewport. *(default: false)*
     #   * **events:**
     #     * **click:** If clicked anywhere on the current image
     #     * **display:** If a new image is being displayed
