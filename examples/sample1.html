@@ -13,6 +13,7 @@
         <script src="../js/ImageFader.js" type="text/javascript" charset="utf-8"></script>
         <script src="../js/ImagePagination.js" type="text/javascript" charset="utf-8"></script>
         <script src="../js/Interval.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../js/ImageCaption.js" type="text/javascript" charset="utf-8"></script>
 
         <script>
             $(window).ready (function() {
@@ -54,6 +55,7 @@
                             c.display(index, {
                                 overrideEvents: true 
                             }) 
+                            e.display(index)
                         }
                     }
                 })
@@ -71,6 +73,19 @@
                             b.next() 
                         }
                     }
+                })
+
+                e = new ImageCaption({
+                    container: $("div#caption"),
+                    captions: [
+                        "This is image 1", 
+                        "This is image 2", 
+                        "This is image 3", 
+                        "This is image 4", 
+                        "This is image 5", 
+                        "This is image 6", 
+                        "This is image 7", 
+                    ]
                 })
 
 
@@ -104,6 +119,7 @@
         <div id="image" style="position: relative; width: 900px; height: 600px; background: #aaaaaa;"></div>
         <div id="pagination"></div>
         <div id="timer"></div>
+        <div id="caption"></div>
         
     </body>
 </html>

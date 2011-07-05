@@ -143,7 +143,8 @@
         }
         this.images[next].image.show();
         this.images[next].image.animate({
-          opacity: 1
+          opacity: 1,
+          useTranslate3d: true
         }, this.options.duration, this._animateFinished);
         return this.currentImage = next;
       }
