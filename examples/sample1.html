@@ -17,7 +17,7 @@
 
         <script>
             $(window).ready (function() {
-                var a, b, c
+                var a, b, c, d, e
                 a = new ImageReader({
                     images: [
                         "images/1.jpg", 
@@ -37,6 +37,7 @@
                             b.display(index, {
                                 overrideEvents: true 
                             }) 
+                            e.display(index)
                         }
                     },
                     imageReader: a
@@ -47,15 +48,15 @@
                     viewport: $("div#image"),
                     duration: 1000,
                     events: {
-                        click: function(e) {
-                            e.preventDefault()
+                        click: function(ev) {
+                            ev.preventDefault()
                             b.next()
                         },
                         display: function(index) {
+                            e.display(index)
                             c.display(index, {
                                 overrideEvents: true 
                             }) 
-                            e.display(index)
                         }
                     }
                 })

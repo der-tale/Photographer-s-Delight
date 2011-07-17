@@ -32,9 +32,10 @@
           container: this.options.paginationContainer,
           events: {
             display: function(index) {
-              return b.display(index, {
+              b.display(index, {
                 overrideEvents: true
               });
+              return e.display(index);
             }
           },
           imageReader: a

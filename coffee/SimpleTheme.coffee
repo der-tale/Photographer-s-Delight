@@ -48,6 +48,7 @@ class PDSimpleTheme
                         b.display index, {
                             overrideEvents: true 
                         } 
+                        e.display index
                 imageReader: a
             }
 
