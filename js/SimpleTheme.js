@@ -1,5 +1,6 @@
 (function() {
   var PDSimpleTheme, root;
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   PDSimpleTheme = (function() {
     PDSimpleTheme.prototype.options = {};
     function PDSimpleTheme(options) {
@@ -7,6 +8,7 @@
       this.options = _.defaults(options, {
         images: [],
         imageContainer: null,
+        imageClickToAdvance: true,
         fadeDuration: 1000,
         paginationContainer: null,
         useInterval: false,
@@ -47,10 +49,12 @@
         viewport: this.options.imageContainer,
         duration: this.options.fadeDuration,
         events: {
-          click: function(e) {
+          click: __bind(function(e) {
             e.preventDefault();
-            return b.next();
-          },
+            if (this.options.imageClickToAdvance === true) {
+              return b.next();
+            }
+          }, this),
           display: function(index) {
             if (c != null) {
               c.display(index, {

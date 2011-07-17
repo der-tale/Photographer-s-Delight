@@ -17,6 +17,7 @@ class PDSimpleTheme
         @options = _.defaults options, {
             images: []
             imageContainer: null
+            imageClickToAdvance: true
             fadeDuration: 1000
             paginationContainer: null
             useInterval: false
@@ -58,9 +59,9 @@ class PDSimpleTheme
             viewport: @options.imageContainer
             duration: @options.fadeDuration
             events: 
-                click: (e) -> 
+                click: (e) => 
                     e.preventDefault()
-                    b.next()
+                    if @options.imageClickToAdvance is true then b.next()
                 display: (index) ->
                     if c? then c.display index, {
                         overrideEvents: true 
