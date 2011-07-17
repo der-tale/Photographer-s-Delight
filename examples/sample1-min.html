@@ -1,0 +1,121 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    
+        <title>Sample1</title>
+
+        <script src="../lib/jquery.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../lib/underscore.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../lib/jquery.animate-enhanced.min.js" type="text/javascript" charset="utf-8"></script>
+
+        <script src="../min/pd.min.js" type="text/javascript" charset="utf-8"></script>
+
+        <script>
+            $(window).ready (function() {
+                var a, b, c
+                a = new ImageReader({
+                    images: [
+                        "images/1.jpg", 
+                        "images/2.jpg", 
+                        "images/3.jpg", 
+                        "images/4.jpg", 
+                        "images/5.jpg", 
+                        "images/6.jpg", 
+                        "images/7.jpg"
+                    ]
+                }) 
+
+                c = new ImagePagination({
+                    container: $("div#pagination"),
+                    events: {
+                        display: function(index) {
+                            b.display(index, {
+                                overrideEvents: true 
+                            }) 
+                        }
+                    },
+                    imageReader: a
+                })
+
+                b = new ImageFader({
+                    imageReader: a,
+                    viewport: $("div#image"),
+                    duration: 1000,
+                    events: {
+                        click: function(e) {
+                            e.preventDefault()
+                            b.next()
+                        },
+                        display: function(index) {
+                            c.display(index, {
+                                overrideEvents: true 
+                            }) 
+                            e.display(index)
+                        }
+                    }
+                })
+
+                d = new Interval({
+                    container: $("div#timer"),
+                    state: true,
+                    interval: 5000,
+                    text: {
+                        stop: "pause",
+                        start: "play"
+                    },
+                    events: {
+                        tick: function() {
+                            b.next() 
+                        }
+                    }
+                })
+
+                e = new ImageCaption({
+                    container: $("div#caption"),
+                    captions: [
+                        "This is image 1", 
+                        "This is image 2", 
+                        "This is image 3", 
+                        "This is image 4", 
+                        "This is image 5", 
+                        "This is image 6", 
+                        "This is image 7", 
+                    ]
+                })
+
+
+            
+            })
+
+
+        </script>
+
+        <style type="text/css" media="screen">
+            html, body {
+                font-family: Helvetica, Arial, Sans;
+                font-size: 12px;
+            }
+
+            div#pagination a {
+                margin-right: 0.5em;
+                color: black;
+                text-decoration: underline; 
+            }
+
+            div#pagination a.selected {
+                color: #ff0000; 
+            }
+        </style>
+        
+    </head>
+
+    <body>
+
+        <div id="image" style="position: relative; width: 900px; height: 600px; background: #aaaaaa;"></div>
+        <div id="pagination"></div>
+        <div id="timer"></div>
+        <div id="caption"></div>
+        
+    </body>
+</html>
