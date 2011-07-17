@@ -9,6 +9,7 @@
         imageContainer: null,
         fadeDuration: 1000,
         paginationContainer: null,
+        useInterval: false,
         intervalContainer: null,
         intervalInitialState: false,
         intervalInterval: 5000,
@@ -62,7 +63,7 @@
           }
         }
       });
-      if (this.options.intervalContainer != null) {
+      if (this.options.useInterval === true) {
         d = new Interval({
           container: this.options.intervalContainer,
           state: this.options.intervalInitialState,

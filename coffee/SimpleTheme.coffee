@@ -19,6 +19,7 @@ class PDSimpleTheme
             imageContainer: null
             fadeDuration: 1000
             paginationContainer: null
+            useInterval: false
             intervalContainer: null
             intervalInitialState: false
             intervalInterval: 5000
@@ -67,7 +68,7 @@ class PDSimpleTheme
                     if e? then e.display index
         }
 
-        if @options.intervalContainer?
+        if @options.useInterval is true
             d = new Interval {
                 container: @options.intervalContainer
                 state: @options.intervalInitialState
