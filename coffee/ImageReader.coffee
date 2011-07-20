@@ -146,8 +146,8 @@ class ImageReader
 
         imageMapElement.image = $(imageMapElement.image)
 
-        imageMapElement?.callback?( 
-            @imageMap.indexOf(imageMapElement),
+        imageMapElement?.callback?(
+            _.indexOf(@imageMap, imageMapElement),
             imageMapElement
         )
 

@@ -42,7 +42,7 @@
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           caption = _ref[_i];
-          _results.push($(this.templates.captionContainer).text(caption).attr("id", this.options.captions.indexOf(caption)).css({
+          _results.push($(this.templates.captionContainer).text(caption).attr("id", _.indexOf(this.options.captions, caption)).css({
             position: "absolute",
             opacity: 0
           }).appendTo(this.options.container));

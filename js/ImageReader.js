@@ -100,7 +100,7 @@
       imageMapElement.image = $(imageMapElement.image);
       if (imageMapElement != null) {
         if (typeof imageMapElement.callback === "function") {
-          imageMapElement.callback(this.imageMap.indexOf(imageMapElement), imageMapElement);
+          imageMapElement.callback(_.indexOf(this.imageMap, imageMapElement), imageMapElement);
         }
       }
       imageMapElement.callback = null;

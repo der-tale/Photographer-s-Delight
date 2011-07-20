@@ -74,7 +74,7 @@
       _ref2 = this.indexLinks;
       for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
         indexLink = _ref2[_i];
-        indexLink.click(_.bind(this.display, this, this.indexLinks.indexOf(indexLink)));
+        indexLink.click(_.bind(this.display, this, _.indexOf(this.indexLinks, indexLink)));
       }
       return this.display(0, {
         overrideEvents: true

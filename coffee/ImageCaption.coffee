@@ -58,7 +58,7 @@ class ImageCaption
 
         @captions = ( ($(@templates.captionContainer)
                 .text(caption)
-                .attr("id", @options.captions.indexOf(caption))
+                .attr("id", _.indexOf @options.captions, caption)
                 .css({
                     position: "absolute"
                     opacity: 0

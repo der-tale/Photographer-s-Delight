@@ -129,7 +129,7 @@ class ImagePagination
         @nextLink.click @next
 
         for indexLink in @indexLinks
-            indexLink.click _.bind( @display, this, @indexLinks.indexOf (indexLink) )
+            indexLink.click _.bind( @display, this, _.indexOf @indexLinks, indexLink )
 
         # display image one
         @display(0, {
