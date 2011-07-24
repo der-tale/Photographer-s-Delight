@@ -1,4 +1,9 @@
-# A simple theme for Photographers Delight
+# A simple "theme" for Photographer's Delight
+#
+# A theme for Photographer's Delight is invoking the several classes with a
+# set of options and should provide default markup and/or CSS styling. 
+#
+# The syntax, features and concept of a theme is subject to change.
 #
 ##### ToDo
 #   * Include main markup creation
@@ -9,7 +14,29 @@ class PDSimpleTheme
     options: {}
     
     #### Options
-
+    #
+    #     {
+    #         images: []
+    #         imageContainer: null
+    #         imageClickToAdvance: true
+    #         imageCenterImageInViewport: true
+    #         imageFitImagesToViewport: false
+    #         fadeDuration: 1000
+    #         paginationContainer: null
+    #         useInterval: false
+    #         intervalContainer: null
+    #         intervalInitialState: false
+    #         intervalInterval: 5000
+    #         intervalText: {
+    #             stop: "pause"
+    #             start: "play"
+    #         }
+    #         captionContainer: null
+    #         captions: []
+    #     }
+    #
+    #    The options in detail can be looked up in the documentation of the 
+    #    single classes. 
     #
     constructor: (options) ->
         options = if options then options else {}
@@ -18,6 +45,8 @@ class PDSimpleTheme
             images: []
             imageContainer: null
             imageClickToAdvance: true
+            imageCenterImageInViewport: true
+            imageFitImagesToViewport: false
             fadeDuration: 1000
             paginationContainer: null
             useInterval: false
@@ -58,6 +87,8 @@ class PDSimpleTheme
             imageReader: a
             viewport: @options.imageContainer
             duration: @options.fadeDuration
+            centerImagesInViewport: @options.imageCenterImageInViewport
+            fitImagesToViewPort: @options.imageFitImagesToViewport
             events: 
                 click: (e) => 
                     e.preventDefault()

@@ -9,6 +9,8 @@
         images: [],
         imageContainer: null,
         imageClickToAdvance: true,
+        imageCenterImageInViewport: true,
+        imageFitImagesToViewport: false,
         fadeDuration: 1000,
         paginationContainer: null,
         useInterval: false,
@@ -48,6 +50,8 @@
         imageReader: a,
         viewport: this.options.imageContainer,
         duration: this.options.fadeDuration,
+        centerImagesInViewport: this.options.imageCenterImageInViewport,
+        fitImagesToViewPort: this.options.imageFitImagesToViewport,
         events: {
           click: __bind(function(e) {
             e.preventDefault();

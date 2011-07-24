@@ -1,0 +1,71 @@
+<!DOCTYPE html>  <html> <head>   <title>ImageCaption.coffee</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="ImageCaption.html">                 ImageCaption.coffee               </a>                                           <a class="source" href="ImageFader.html">                 ImageFader.coffee               </a>                                           <a class="source" href="ImagePagination.html">                 ImagePagination.coffee               </a>                                           <a class="source" href="ImageReader.html">                 ImageReader.coffee               </a>                                           <a class="source" href="Interval.html">                 Interval.coffee               </a>                                           <a class="source" href="SimpleTheme.html">                 SimpleTheme.coffee               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               ImageCaption.coffee             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <p>Takes a list of captions and offers methods
+to display captions on demand.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="k">class</span> <span class="nx">ImageCaption</span>
+
+    
+    <span class="nv">options: </span><span class="p">{}</span>
+
+    <span class="nv">currentCaption: </span><span class="o">-</span><span class="mi">1</span>
+
+    <span class="nv">captions: </span><span class="p">[]</span>
+
+    <span class="nv">templates: </span><span class="p">{</span>
+        <span class="nv">captionContainer: </span><span class="s2">&quot;&lt;div&gt;&lt;/div&gt;&quot;</span>
+    <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <h3>Options</h3>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>ImageCaption takes a single object as an option value.</p>
+
+<pre><code>{ 
+   captions: ["Caption 1", "Caption 2"],
+   container: null,
+   duration: 500
+} 
+</code></pre>
+
+<p>The options in detail:</p>
+
+<ul>
+<li><strong>captions</strong>: A list of captions</li>
+<li><strong>container</strong>: DOM element to put the caption into</li>
+<li><strong>duration</strong>: Fade duration for the animation</li>
+</ul>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">constructor: </span><span class="nf">(options) -&gt;</span>
+        <span class="nv">options = </span><span class="k">if</span> <span class="nx">options</span> <span class="k">then</span> <span class="nx">options</span> <span class="k">else</span> <span class="p">{}</span>
+        <span class="vi">@options = </span><span class="nx">_</span><span class="p">.</span><span class="nx">defaults</span> <span class="nx">options</span><span class="p">,</span> <span class="p">{</span>
+            <span class="nv">captions: </span><span class="p">[],</span>
+            <span class="nv">container: </span><span class="kc">null</span><span class="p">,</span>
+            <span class="nv">duration: </span><span class="mi">500</span>
+        <span class="p">}</span>
+
+        <span class="vi">@options.container = </span><span class="nx">$</span> <span class="nx">@options</span><span class="p">.</span><span class="nx">container</span>
+
+        <span class="vi">@currentCaption = </span><span class="o">-</span><span class="mi">1</span>
+        <span class="vi">@captions = </span><span class="p">[]</span>
+
+        <span class="nx">@_init</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <h3>Public Methods</h3>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p>Display the caption with the given index</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">display: </span><span class="nf">(index) -&gt;</span>
+
+        <span class="nv">newImage = </span><span class="nx">@captions</span><span class="p">[</span><span class="nx">index</span><span class="p">]</span>
+        <span class="nv">oldImage = </span><span class="nx">@captions</span><span class="p">[</span><span class="nx">@currentCaption</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="nx">oldImage</span> <span class="k">then</span> <span class="nx">oldImage</span><span class="p">.</span><span class="nx">animate</span> <span class="p">{</span>
+            <span class="nv">opacity: </span><span class="mi">0</span> 
+        <span class="p">},</span> <span class="nx">@options</span><span class="p">.</span><span class="nx">duration</span>
+
+        <span class="nx">newImage</span><span class="p">.</span><span class="nx">animate</span> <span class="p">{</span>
+            <span class="nv">opacity: </span><span class="mi">1</span><span class="p">,</span>
+            <span class="nv">useTranslate3d: </span><span class="kc">true</span>
+        <span class="p">},</span> <span class="nx">@options</span><span class="p">.</span><span class="nx">duration</span>
+
+        <span class="vi">@currentCaption = </span><span class="nx">index</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <h3>Private Methods</h3>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">_init: </span><span class="o">-&gt;</span>
+
+        <span class="vi">@captions = </span><span class="p">(</span> <span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="nx">@templates</span><span class="p">.</span><span class="nx">captionContainer</span><span class="p">)</span>
+                <span class="p">.</span><span class="nx">text</span><span class="p">(</span><span class="nx">caption</span><span class="p">)</span>
+                <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="nx">_</span><span class="p">.</span><span class="nx">indexOf</span> <span class="nx">@options</span><span class="p">.</span><span class="nx">captions</span><span class="p">,</span> <span class="nx">caption</span><span class="p">)</span>
+                <span class="p">.</span><span class="nx">css</span><span class="p">({</span>
+                    <span class="nv">position: </span><span class="s2">&quot;absolute&quot;</span>
+                    <span class="nv">opacity: </span><span class="mi">0</span>
+                <span class="p">}).</span><span class="nx">appendTo</span> <span class="nx">@options</span><span class="p">.</span><span class="nx">container</span>
+        <span class="p">)</span> <span class="k">for</span> <span class="nx">caption</span> <span class="k">in</span> <span class="nx">@options</span><span class="p">.</span><span class="nx">captions</span> <span class="p">)</span>
+
+        <span class="nx">@display</span> <span class="mi">0</span>
+
+        </pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <p>Now export this class </p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">root = </span><span class="nx">exports</span> <span class="o">?</span> <span class="k">this</span>
+<span class="nv">root.ImageCaption = </span><span class="nx">ImageCaption</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

@@ -1,0 +1,117 @@
+<!DOCTYPE html>  <html> <head>   <title>SimpleTheme.coffee</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="ImageCaption.html">                 ImageCaption.coffee               </a>                                           <a class="source" href="ImageFader.html">                 ImageFader.coffee               </a>                                           <a class="source" href="ImagePagination.html">                 ImagePagination.coffee               </a>                                           <a class="source" href="ImageReader.html">                 ImageReader.coffee               </a>                                           <a class="source" href="Interval.html">                 Interval.coffee               </a>                                           <a class="source" href="SimpleTheme.html">                 SimpleTheme.coffee               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               SimpleTheme.coffee             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <p>A simple "theme" for Photographer's Delight</p>
+
+<p>A theme for Photographer's Delight is invoking the several classes with a
+set of options and should provide default markup and/or CSS styling. </p>
+
+<p>The syntax, features and concept of a theme is subject to change.</p>
+
+<h4>ToDo</h4>
+
+<ul>
+<li>Include main markup creation</li>
+</ul>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="k">class</span> <span class="nx">PDSimpleTheme</span>
+
+    <span class="nv">options: </span><span class="p">{}</span>
+    </pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <h3>Options</h3>
+
+<pre><code>{
+    images: []
+    imageContainer: null
+    imageClickToAdvance: true
+    imageCenterImageInViewport: true
+    imageFitImagesToViewport: false
+    fadeDuration: 1000
+    paginationContainer: null
+    useInterval: false
+    intervalContainer: null
+    intervalInitialState: false
+    intervalInterval: 5000
+    intervalText: {
+        stop: "pause"
+        start: "play"
+    }
+    captionContainer: null
+    captions: []
+}
+</code></pre>
+
+<p>The options in detail can be looked up in the documentation of the 
+   single classes. </p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">constructor: </span><span class="nf">(options) -&gt;</span>
+        <span class="nv">options = </span><span class="k">if</span> <span class="nx">options</span> <span class="k">then</span> <span class="nx">options</span> <span class="k">else</span> <span class="p">{}</span>
+
+        <span class="vi">@options = </span><span class="nx">_</span><span class="p">.</span><span class="nx">defaults</span> <span class="nx">options</span><span class="p">,</span> <span class="p">{</span>
+            <span class="nv">images: </span><span class="p">[]</span>
+            <span class="nv">imageContainer: </span><span class="kc">null</span>
+            <span class="nv">imageClickToAdvance: </span><span class="kc">true</span>
+            <span class="nv">imageCenterImageInViewport: </span><span class="kc">true</span>
+            <span class="nv">imageFitImagesToViewport: </span><span class="kc">false</span>
+            <span class="nv">fadeDuration: </span><span class="mi">1000</span>
+            <span class="nv">paginationContainer: </span><span class="kc">null</span>
+            <span class="nv">useInterval: </span><span class="kc">false</span>
+            <span class="nv">intervalContainer: </span><span class="kc">null</span>
+            <span class="nv">intervalInitialState: </span><span class="kc">false</span>
+            <span class="nv">intervalInterval: </span><span class="mi">5000</span>
+            <span class="nv">intervalText: </span><span class="p">{</span>
+                <span class="nv">stop: </span><span class="s2">&quot;pause&quot;</span>
+                <span class="nv">start: </span><span class="s2">&quot;play&quot;</span>
+            <span class="p">}</span>
+            <span class="nv">captionContainer: </span><span class="kc">null</span>
+            <span class="nv">captions: </span><span class="p">[]</span>
+        <span class="p">}</span>
+
+        <span class="nx">@_init</span><span class="p">()</span>
+    </pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <h3>Private Methods</h3>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">_init: </span><span class="o">-&gt;</span>
+        <span class="nv">a = b = c = d = e = </span><span class="kc">null</span>
+
+        <span class="nv">a = </span><span class="k">new</span> <span class="nx">ImageReader</span> <span class="p">{</span>
+            <span class="nv">images: </span><span class="nx">@options</span><span class="p">.</span><span class="nx">images</span>
+        <span class="p">}</span> 
+
+        <span class="k">if</span> <span class="nx">@options</span><span class="p">.</span><span class="nx">paginationContainer</span><span class="o">?</span>
+            <span class="nv">c = </span><span class="k">new</span> <span class="nx">ImagePagination</span> <span class="p">{</span>
+                <span class="nv">container: </span><span class="nx">@options</span><span class="p">.</span><span class="nx">paginationContainer</span>
+                <span class="nv">events: </span>
+                    <span class="nv">display: </span><span class="nf">(index) -&gt;</span> 
+                        <span class="nx">b</span><span class="p">.</span><span class="nx">display</span> <span class="nx">index</span><span class="p">,</span> <span class="p">{</span>
+                            <span class="nv">overrideEvents: </span><span class="kc">true</span> 
+                        <span class="p">}</span> 
+                        <span class="nx">e</span><span class="p">.</span><span class="nx">display</span> <span class="nx">index</span>
+                <span class="nv">imageReader: </span><span class="nx">a</span>
+            <span class="p">}</span>
+
+        <span class="nv">b = </span><span class="k">new</span> <span class="nx">ImageFader</span> <span class="p">{</span>
+            <span class="nv">imageReader: </span><span class="nx">a</span>
+            <span class="nv">viewport: </span><span class="nx">@options</span><span class="p">.</span><span class="nx">imageContainer</span>
+            <span class="nv">duration: </span><span class="nx">@options</span><span class="p">.</span><span class="nx">fadeDuration</span>
+            <span class="nv">centerImagesInViewport: </span><span class="nx">@options</span><span class="p">.</span><span class="nx">imageCenterImageInViewport</span>
+            <span class="nv">fitImagesToViewPort: </span><span class="nx">@options</span><span class="p">.</span><span class="nx">imageFitImagesToViewport</span>
+            <span class="nv">events: </span>
+                <span class="nv">click: </span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="o">=&gt;</span> 
+                    <span class="nx">e</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="nx">@options</span><span class="p">.</span><span class="nx">imageClickToAdvance</span> <span class="o">is</span> <span class="kc">true</span> <span class="k">then</span> <span class="nx">b</span><span class="p">.</span><span class="nx">next</span><span class="p">()</span>
+                <span class="nv">display: </span><span class="nf">(index) -&gt;</span>
+                    <span class="k">if</span> <span class="nx">c</span><span class="o">?</span> <span class="k">then</span> <span class="nx">c</span><span class="p">.</span><span class="nx">display</span> <span class="nx">index</span><span class="p">,</span> <span class="p">{</span>
+                        <span class="nv">overrideEvents: </span><span class="kc">true</span> 
+                    <span class="p">}</span> 
+                    <span class="k">if</span> <span class="nx">e</span><span class="o">?</span> <span class="k">then</span> <span class="nx">e</span><span class="p">.</span><span class="nx">display</span> <span class="nx">index</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="nx">@options</span><span class="p">.</span><span class="nx">useInterval</span> <span class="o">is</span> <span class="kc">true</span>
+            <span class="nv">d = </span><span class="k">new</span> <span class="nx">Interval</span> <span class="p">{</span>
+                <span class="nv">container: </span><span class="nx">@options</span><span class="p">.</span><span class="nx">intervalContainer</span>
+                <span class="nv">state: </span><span class="nx">@options</span><span class="p">.</span><span class="nx">intervalInitialState</span>
+                <span class="nv">interval: </span><span class="nx">@options</span><span class="p">.</span><span class="nx">intervalInterval</span>
+                <span class="nv">text: </span><span class="nx">@options</span><span class="p">.</span><span class="nx">intervalText</span>
+                <span class="nv">events: </span>
+                    <span class="nv">tick: </span><span class="nf">() -&gt;</span> 
+                        <span class="nx">b</span><span class="p">.</span><span class="nx">next</span><span class="p">()</span> 
+            <span class="p">}</span>
+
+        <span class="k">if</span> <span class="nx">@options</span><span class="p">.</span><span class="nx">captionContainer</span><span class="o">?</span>
+            <span class="nv">e = </span><span class="k">new</span> <span class="nx">ImageCaption</span> <span class="p">{</span>
+                <span class="nv">container: </span><span class="nx">@options</span><span class="p">.</span><span class="nx">captionContainer</span>
+                <span class="nv">captions: </span><span class="nx">@options</span><span class="p">.</span><span class="nx">captions</span>
+            <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>Now export this class </p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">root = </span><span class="nx">exports</span> <span class="o">?</span> <span class="k">this</span>
+<span class="nv">root.PDSimpleTheme = </span><span class="nx">PDSimpleTheme</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

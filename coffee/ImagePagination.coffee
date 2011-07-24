@@ -1,5 +1,5 @@
-# Offers a simple pagination menu to select an image to display or
-# to go to the next or previous image
+# Offers a simple pagination like menu to select an image to display or
+# to go to the next or previous image.
 
 #
 class ImagePagination
@@ -29,7 +29,7 @@ class ImagePagination
     #              next: ">"
     #          }
     #          css: {
-    #              selected: ".selected"
+    #              selected: "selected"
     #          }
     #          events: {
     #               display: function() { ... }

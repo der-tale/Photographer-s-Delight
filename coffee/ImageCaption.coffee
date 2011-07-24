@@ -1,5 +1,5 @@
-# Takes a list of pieces of text and offers methods
-# to display one piece of text on demand.
+# Takes a list of captions and offers methods
+# to display captions on demand.
 
 #
 class ImageCaption
@@ -17,7 +17,19 @@ class ImageCaption
 
     #### Options
 
+    # ImageCaption takes a single object as an option value.
     #
+    #     { 
+    #        captions: ["Caption 1", "Caption 2"],
+    #        container: null,
+    #        duration: 500
+    #     } 
+    #
+    # The options in detail:
+    #
+    #   * **captions**: A list of captions
+    #   * **container**: DOM element to put the caption into
+    #   * **duration**: Fade duration for the animation
     constructor: (options) ->
         options = if options then options else {}
         @options = _.defaults options, {
@@ -35,7 +47,7 @@ class ImageCaption
 
     #### Public Methods
 
-    # Display the caption with index
+    # Display the caption with the given index
     display: (index) ->
 
         newImage = @captions[index]
