@@ -11,7 +11,7 @@ Photographer's Delight is (of now) a set of classes to build nice and fat free j
 
 PD is written in CoffeeScript, a compiled and minified version is included to get everything up running quickly.
 
-To view a demo have a look at my [portfolio][photographic portfolio] on my website or just pull the code and check out the samples.
+To view a demo have a look at my [photographic portfolio][portfolio] on my website or just pull the code and check out the samples.
 
 Todo
 ----
