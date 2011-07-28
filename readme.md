@@ -22,4 +22,9 @@ Todo
   * More sample themes
   * Explicit mobile support (iPad)
 
+Licence
+-------
+
+The code is licenced under the GPL3 except all sample images. These images are provided only for evaluation purposes and may not be redistributed.
+
 [portfolio]: http://www.zamora.de/photography
