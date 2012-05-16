@@ -49,14 +49,17 @@ class ImageCaption
 
     # Display the caption with the given index
     display: (index) ->
+        if @currentCaption is index then return
 
         newImage = @captions[index]
         oldImage = @captions[@currentCaption]
 
         if oldImage then oldImage.animate {
             opacity: 0 
-        }, @options.duration
+        }, @options.duration, () -> 
+            oldImage.hide()
 
+        newImage.show()
         newImage.animate {
             opacity: 1,
             useTranslate3d: true
@@ -69,11 +72,12 @@ class ImageCaption
     _init: ->
 
         @captions = ( ($(@templates.captionContainer)
-                .text(caption)
+                .html(caption)
                 .attr("id", _.indexOf @options.captions, caption)
                 .css({
                     position: "absolute"
                     opacity: 0
+                    display: "none"
                 }).appendTo @options.container
         ) for caption in @options.captions )
 

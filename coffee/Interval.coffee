@@ -8,10 +8,6 @@ class Interval
 
     toggleLink: null
 
-    templates: {
-        link: "<a href='javascript:;'></a>" 
-    }
-
     #### Options
 
     # Interval takes a single object as an option value.
@@ -49,6 +45,7 @@ class Interval
             container: null
             state: false
             interval: 3000
+            toggleMarkup: $("<a>").attr("href", "javascript:;")
             text: {
                 stop: "pause"
                 start: "play"
@@ -83,7 +80,7 @@ class Interval
     # Initialize
     _init: () ->
         if @options.container 
-            @toggleLink = $(@templates.link) 
+            @toggleLink = @options.toggleMarkup
             @options.container.append @toggleLink
             @toggleLink.click @_toggle
 

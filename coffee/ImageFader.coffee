@@ -159,7 +159,7 @@ class ImageFader
     _fitImage: (image) ->
         viewportDimensions = @_imageDimensions(@options.viewport) 
         imageDimensions = @_imageDimensions(image.image)
-        
+
         # Find out which is the "base" dimension to enlarge (or shrink) to 
         # the viewport
         longestDimensionImage = 
@@ -175,14 +175,15 @@ class ImageFader
         otherDimensionImage =
             if longestDimensionImage is 'x' then 'y' else 'x'
 
+
         enlargementFactor = @_calculateEnlargementFactor viewportDimensions,
             imageDimensions,
             longestDimensionImage
 
         # If the viewport is smaller on the otherDimension as our enlargement
         # would require, take this dimension as the base
-        if enlargmentFactor * imageDimensions[otherDimensionImage] > viewportDimensions[otherDimensionImage]
-            enlargmentFactor = @_calculateEnlargementFactor viewportDimensions,
+        if (enlargementFactor * parseInt(imageDimensions[otherDimensionImage])) > viewportDimensions[otherDimensionImage]
+            enlargementFactor = @_calculateEnlargementFactor viewportDimensions,
                 imageDimensions,
                 otherDimensionImage
 
