@@ -10,7 +10,8 @@
         <script src="../lib/jquery.animate-enhanced.min.js" type="text/javascript" charset="utf-8"></script>
 
         <script src="../js/ImageReader.js" type="text/javascript" charset="utf-8"></script>
-        <script src="../js/ImageFader.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../js/ImageChanger.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../js/ImageSlider.js" type="text/javascript" charset="utf-8"></script>
         <script src="../js/ImagePagination.js" type="text/javascript" charset="utf-8"></script>
         <script src="../js/Interval.js" type="text/javascript" charset="utf-8"></script>
         <script src="../js/ImageCaption.js" type="text/javascript" charset="utf-8"></script>
@@ -33,9 +34,10 @@
                 c = new ImagePagination({
                     container: $("div#pagination"),
                     events: {
-                        display: function(index) {
+                        display: function(index, aa) {
                             b.display(index, {
-                                overrideEvents: true 
+                                overrideEvents: true, 
+                                automaticAnimation: aa
                             }) 
                             e.display(index)
                         }
@@ -43,7 +45,7 @@
                     imageReader: a
                 })
 
-                b = new ImageFader({
+                b = new ImageSlider({
                     imageReader: a,
                     viewport: $("div#image"),
                     duration: 1000,
@@ -103,21 +105,31 @@
             }
 
             div#pagination a {
-                margin-right: 0.5em;
+                margin-right: 4px;
                 color: black;
                 text-decoration: underline; 
+                /*background-image: url("dot_lightgrey.gif");
+                font-size: 0px;
+                padding-left: 8px;
+                padding-top: 8px;*/
             }
 
             div#pagination a.selected {
                 color: #ff0000; 
+                /*background-image: url("dot_grey.gif")*/
             }
+
+            /*div#pagination a.previous, div#pagination a.next {
+                display: none;
+            }*/
         </style>
         
     </head>
 
     <body>
-
-        <div id="image" style="position: relative; width: 900px; height: 600px; background: #aaaaaa;"></div>
+        <div id="imagewrapper" style="position: relative; width: 900px; height: 600px; background: #aaaaaa;">
+	        <div id="image" style="position: relative; left: 52px; top: 35px; width: 795px; height: 530px; background: #aaaaaa; overflow: hidden;"></div>
+        </div>
         <div id="pagination"></div>
         <div id="timer"></div>
         <div id="caption"></div>
