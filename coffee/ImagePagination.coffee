@@ -60,6 +60,8 @@ class ImagePagination
             }
             css: {
                 selected: "selected"
+                previous: "previous"
+                next: "next"
             }
             events: {
                 display: null
@@ -87,23 +89,27 @@ class ImagePagination
         @currentImage = index
 
         if not options?.overrideEvents or options.overrideEvents is not true 
-            @options.events?.display?(index)
+            if options?.automaticAnimation
+                @options.events?.display?(index, true)
+            else
+                @options.events?.display?(index, false)
 
     # Show the previous image. If the current image is the first one, show the
     # last in the set.
     previous: () =>
+        @automaticAnimation = true
         if @currentImage > 0
-            @display @currentImage - 1
+            @display(@currentImage - 1, {automaticAnimation: true})
         else 
-            @display @imageCount - 1
+            @display(@imageCount - 1, {automaticAnimation: true})
 
     # Show the next image. If the current image is the last one, show the first
     # again.
     next: () =>
         if @currentImage + 1 < @imageCount 
-            @display @currentImage + 1
+            @display(@currentImage + 1, {automaticAnimation: true})
         else
-            @display 0
+            @display(0, {automaticAnimation: true})
 
 
 
@@ -116,6 +122,7 @@ class ImagePagination
         # create markup
         @previousLink = $(@templates.link)
         @options.container.append @previousLink.text @options.text.previous  
+        @previousLink.toggleClass @options.css.previous
 
         for index in [0..@imageCount-1]
             @indexLinks[index] = $(@templates.link)
@@ -123,6 +130,7 @@ class ImagePagination
 
         @nextLink = $(@templates.link)
         @options.container.append @nextLink.text @options.text.next  
+        @nextLink.toggleClass @options.css.next
 
         # register events
         @previousLink.click @previous
